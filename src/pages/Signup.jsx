@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuthContext } from "../contexts/authContext";
-import ls from "../assets/login-signup.jpg";
 import { HOME, LOGIN } from "../config/routes/paths";
+import ls from "../assets/login-signup.jpg";
 
 function Signup() {
   const navigate = useNavigate();
-  const { signup, getSession } = useAuthContext();
+  const { t } = useTranslation();
+  const { isAuthenticated, signup, getSession } = useAuthContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,10 +18,11 @@ function Signup() {
   useEffect(() => {
     getSession()
       .then((result) => {
+        console.log('result', result, isAuthenticated)
         if (result.data.session) navigate(HOME);
       })
       .catch((error) => console.error(error));
-  }, [navigate, getSession]);
+  }, [navigate, getSession, isAuthenticated]);
 
   const validateEmail = (mail) =>
     /^\w+([.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(mail);
@@ -33,9 +36,12 @@ function Signup() {
     });
 
     if (validForm.email && validForm.password) {
-      signup(email, password);
+      signup(email, password).then((result) => {
+        console.log('result handleSignup', result, isAuthenticated)
+        if (result.data.session) navigate(HOME);
+      })
+      .catch((error) => console.error(error));;
     }
-
   };
 
   return (
@@ -44,20 +50,24 @@ function Signup() {
         <div className="card mb-3" style={{ maxWidth: "540px" }}>
           <div className="row g-0">
             <div className="col-md-4">
-              <img src={ls} className="img-fluid d-none d-sm-none d-md-block" alt="Cookea Logo" />
+              <img
+                src={ls}
+                className="img-fluid d-none d-sm-none d-md-block"
+                alt="Cookea Logo"
+              />
             </div>
             <div className="col-md-8">
               <div className="card-body">
                 <h5 className="card-title mb-4">
-                  Become a new cookea
+                  {t("Become a new cookea")}
                   <br />
-                  Get started here
+                  {t("Get started here")}
                 </h5>
                 <form onSubmit={handleSignup}>
                   <input
                     type="email"
                     name="email"
-                    placeholder="youremail@site.com"
+                    placeholder="email@example.com"
                     onChange={(e) => setEmail(e.target.value)}
                     className={`form-control mb-2 ${
                       !validForm.email && "is-invalid"
@@ -66,7 +76,7 @@ function Signup() {
                   />
                   {!validForm.email && (
                     <div className="invalid-feedback">
-                      Please enter a valid email.
+                      {t("Please enter a valid email.")}
                     </div>
                   )}
                   <div className="input-group mb-2 has-validation">
@@ -76,6 +86,7 @@ function Signup() {
                         !validForm.password && "is-invalid"
                       }`}
                       name="password"
+                      placeholder={t("Password")}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />
@@ -94,14 +105,16 @@ function Signup() {
                     </button>
                     {!validForm.password && (
                       <div className="invalid-feedback">
-                        Password must be at leat 8 characters.
+                        {t("Password must be at leat 8 characters.")}
                       </div>
                     )}
                   </div>
-                  <button className="btn btn-success">Signup</button>
+                  <button className="btn btn-success" tabIndex={0}>
+                    {t("Signup")}
+                  </button>
                 </form>
                 <div className="mt-2">
-                  <Link to={LOGIN}>or Sign in with email</Link>
+                  <Link to={LOGIN}>{t("or Sign in with email")}</Link>
                 </div>
               </div>
             </div>

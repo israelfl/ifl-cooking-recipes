@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuthContext } from "../contexts/authContext";
-import ls from "../assets/login-signup.jpg";
 import { HOME, SIGNUP } from "../config/routes/paths";
+import ls from "../assets/login-signup.jpg";
 
 function Login() {
   const navigate = useNavigate();
-  const { login, getSession } = useAuthContext();
+  const { t } = useTranslation();
+  const { isAuthenticated, login, getSession } = useAuthContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +22,7 @@ function Login() {
         if (result.data.session) navigate(HOME);
       })
       .catch((error) => console.error(error));
-  }, [navigate, getSession]);
+  }, [navigate, getSession, isAuthenticated]);
 
   const validateEmail = (mail) =>
     /^\w+([.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(mail);
@@ -40,7 +42,7 @@ function Login() {
         if (response.error) setLoginError(response.error.message);
         else {
           console.log("response Login", response);
-          navigate(HOME)
+          navigate(HOME);
         }
       });
   };
@@ -64,12 +66,12 @@ function Login() {
                     {loginError}
                   </div>
                 )}
-                <h5 className="card-title mb-4">Sign in</h5>
+                <h5 className="card-title mb-4">{t("Sign in")}</h5>
                 <form onSubmit={handleLogin}>
                   <input
                     type="email"
                     name="email"
-                    placeholder="youremail@site.com"
+                    placeholder="email@example.com"
                     onChange={(e) => setEmail(e.target.value)}
                     className={`form-control mb-2 ${
                       !validForm.email && "is-invalid"
@@ -78,7 +80,7 @@ function Login() {
                   />
                   {!validForm.email && (
                     <div className="invalid-feedback">
-                      Please enter a valid email.
+                      {t("Please enter a valid email.")}
                     </div>
                   )}
                   <div className="input-group mb-2 has-validation">
@@ -88,6 +90,7 @@ function Login() {
                         !validForm.password && "is-invalid"
                       }`}
                       name="password"
+                      placeholder={t("Password")}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />
@@ -106,14 +109,14 @@ function Login() {
                     </button>
                     {!validForm.password && (
                       <div className="invalid-feedback">
-                        Password is required.
+                        {t("Password is required.")}
                       </div>
                     )}
                   </div>
-                  <button className="btn btn-success">Login</button>
+                  <button className="btn btn-success">{t("Login")}</button>
                 </form>
                 <div className="mt-2">
-                  <Link to={SIGNUP}>or Sign up with email</Link>
+                  <Link to={SIGNUP}>{t("or Sign up with email")}</Link>
                 </div>
               </div>
             </div>

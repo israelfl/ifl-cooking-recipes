@@ -16,6 +16,7 @@ function Navbar() {
 
   const changeLang = (e, lang, langName) => {
     e.preventDefault();
+    console.log('changeLanguage', lang)
     i18n.changeLanguage(lang);
     setLangName(langName);
   };

@@ -23,7 +23,7 @@ i18n
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
     fallbackLng: "en",
-    debug: false,
+    debug: true,
     whitelist: Object.keys(lngConfig),
 
     interpolation: {

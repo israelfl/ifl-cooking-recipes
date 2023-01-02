@@ -1,5 +1,14 @@
 {
   "Login": "Login FR",
   "Logout": "Logout FR",
-  "Tasks": "Tasks FR"
+  "Tasks": "Tasks FR",
+  "or Sign up with email": "or Sign up with email FR",
+  "Password is required.": "Password is required. FR",
+  "Please enter a valid email.": "Please enter a valid email. FR",
+  "Sign in": "Sign in FR",
+  "Password": "Password FR",
+  "Become a new cookea": "Become a new cookea FR",
+  "Get started here": "Get started here FR",
+  "Signup": "Signup FR",
+  "or Sign in with email": "or Sign in with email FR"
 }
