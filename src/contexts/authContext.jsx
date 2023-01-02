@@ -51,10 +51,12 @@ export function AuthContextProvider({ children }) {
 
   useEffect(() => {
     getSession()
-      .then((result) => {
-        console.log('getSession', result)
+      .then(async (result) => {
         if (result.data.session) {
-          setUser(result.data.session.user);
+          const { data: profile } = await supabase
+          .from('profiles')
+          .select('id, username, avatar_url, website, roles')
+          setUser({...result.data.session.user, 'profile': profile[0]});
           setIsAuthenticated(true);
         }
       })

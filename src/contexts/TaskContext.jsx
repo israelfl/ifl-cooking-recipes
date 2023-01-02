@@ -18,7 +18,6 @@ export const TaskContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const getTasks = async (done = false) => {
-    console.info("taskUser", user);
     setLoading(true);
     const { error, data } = await supabase
       .from("tasks")
@@ -53,7 +52,7 @@ export const TaskContextProvider = ({ children }) => {
   };
 
   const deleteTask = async (id) => {
-    const { error, data } = await supabase
+    const { error } = await supabase
       .from("tasks")
       .delete()
       .eq("userId", user.id)
@@ -66,8 +65,7 @@ export const TaskContextProvider = ({ children }) => {
   };
 
   const updateTask = async (id, updateFields) => {
-    console.log(id, updateFields);
-    const { error, data } = await supabase
+    const { error } = await supabase
       .from("tasks")
       .update(updateFields)
       .eq("userId", user.id)
