@@ -1,24 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useAuthContext } from "../contexts/authContext";
-import { HOME, LOGIN } from "../config/routes/paths";
-import ls from "../assets/login-signup.jpg";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { useAuthContext } from "../../contexts/authContext";
+import { HOME, SIGNUP } from "../../config/routes/paths";
+import ls from "../../assets/login-signup.jpg";
 
-function Signup() {
+function Login() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { isAuthenticated, signup, getSession } = useAuthContext();
+  const { isAuthenticated, login, getSession } = useAuthContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
   const [validForm, setValidForm] = useState({ email: true, password: true });
+  const [loginError, setLoginError] = useState("");
 
   useEffect(() => {
     getSession()
       .then((result) => {
-        console.log('result', result, isAuthenticated)
         if (result.data.session) navigate(HOME);
       })
       .catch((error) => console.error(error));
@@ -27,21 +28,23 @@ function Signup() {
   const validateEmail = (mail) =>
     /^\w+([.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(mail);
 
-  const handleSignup = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
+    setLoginError("");
 
     setValidForm({
       email: email.length !== 0 && validateEmail(email),
-      password: password.length >= 8,
+      password: password.length >= 0,
     });
 
-    if (validForm.email && validForm.password) {
-      signup(email, password).then((result) => {
-        console.log('result handleSignup', result, isAuthenticated)
-        if (result.data.session) navigate(HOME);
-      })
-      .catch((error) => console.error(error));;
-    }
+    if (validForm.email && validForm.password)
+      await login(email, password).then((response) => {
+        if (response.error) setLoginError(response.error.message);
+        else {
+          return navigate(HOME);
+        }
+      });
   };
 
   return (
@@ -57,13 +60,14 @@ function Signup() {
               />
             </div>
             <div className="col-md-8">
-              <div className="card-body">
-                <h5 className="card-title mb-4">
-                  {t("Become a new cookea")}
-                  <br />
-                  {t("Get started here")}
-                </h5>
-                <form onSubmit={handleSignup}>
+              <div className="card-body text-center">
+                {Boolean(loginError.length) && (
+                  <div className="alert alert-danger" role="alert">
+                    {loginError}
+                  </div>
+                )}
+                <h5 className="card-title mb-4">{t("Sign in")}</h5>
+                <form onSubmit={handleLogin}>
                   <input
                     type="email"
                     name="email"
@@ -79,7 +83,7 @@ function Signup() {
                       {t("Please enter a valid email.")}
                     </div>
                   )}
-                  <div className="input-group mb-2 has-validation">
+                  <div className="input-group mb-2">
                     <input
                       type={passwordShown ? "text" : "password"}
                       className={`form-control ${
@@ -88,6 +92,7 @@ function Signup() {
                       name="password"
                       placeholder={t("Password")}
                       onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="off"
                       required
                     />
                     <button
@@ -97,24 +102,18 @@ function Signup() {
                       }}
                       className="input-group-text"
                     >
-                      <i
-                        className={`fa-regular ${
-                          passwordShown ? "fa-eye-slash" : "fa-eye"
-                        }`}
-                      ></i>
+                      {passwordShown ? <AiFillEyeInvisible /> : <AiFillEye />}
                     </button>
                     {!validForm.password && (
                       <div className="invalid-feedback">
-                        {t("Password must be at leat 8 characters.")}
+                        {t("Password is required.")}
                       </div>
                     )}
                   </div>
-                  <button className="btn btn-success" tabIndex={0}>
-                    {t("Signup")}
-                  </button>
+                  <button className="btn btn-success">{t("Login")}</button>
                 </form>
                 <div className="mt-2">
-                  <Link to={LOGIN}>{t("or Sign in with email")}</Link>
+                  <Link to={SIGNUP}>{t("or Sign up with email")}</Link>
                 </div>
               </div>
             </div>
@@ -125,4 +124,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;

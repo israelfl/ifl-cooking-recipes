@@ -1,19 +1,30 @@
 import { useEffect } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { LOGIN } from "../../config/routes/paths";
 import { useAuthContext } from "../../contexts/authContext";
 import Navbar from "../Navbar";
+import Menu from "../private/Menu";
 
 function PrivateRoute() {
-  const { isAuthenticated, user } = useAuthContext();
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
 
-  if (!isAuthenticated) return <Navigate to={LOGIN} />;
+  useEffect(() => {
+    if (user.profile?.roles) {
+      if (!user.profile?.roles.includes("user")) return navigate(LOGIN);
+    }
+  }, [navigate, user]);
 
   return (
     <div>
       <Navbar />
-      <div className="container mt-4">
-        <Outlet />
+      <div className="container-fluid">
+        <div className="row flex-nowrap">
+            <Menu />
+          <div className="col py-3">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

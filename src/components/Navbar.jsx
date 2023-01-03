@@ -1,10 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-import { HOME, LOGIN, TASKS } from "../config/routes/paths";
+import { HOME, LOGIN, MYKITCHEN, PRIVATE, TASKS } from "../config/routes/paths";
 import { useAuthContext } from "../contexts/authContext";
 import logo from "../assets/logo.png";
 import { useTranslation } from "react-i18next";
 import { lngConfig } from "../config/i18n";
 import { useState } from "react";
+import { HiLanguage } from "react-icons/hi2";
+import { GiCook } from "react-icons/gi";
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -16,7 +19,7 @@ function Navbar() {
 
   const changeLang = (e, lang, langName) => {
     e.preventDefault();
-    console.log('changeLanguage', lang)
+    console.log("changeLanguage", lang);
     i18n.changeLanguage(lang);
     setLangName(langName);
   };
@@ -54,7 +57,7 @@ function Navbar() {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <i className="fas fa-globe"></i> {langName}
+                <HiLanguage /> {langName}
               </a>
               <ul
                 className="dropdown-menu"
@@ -101,8 +104,13 @@ function Navbar() {
                   style={{ margin: 0 }}
                 >
                   <li>
-                    <Link to={TASKS} className="nav-link">
+                    <Link to={`${PRIVATE}/${TASKS}`} className="nav-link">
                       {t("Tasks")}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`${PRIVATE}/${MYKITCHEN}`} className="nav-link">
+                      <GiCook /> {t("My Kitchen")}
                     </Link>
                   </li>
                   <li>
@@ -115,7 +123,7 @@ function Navbar() {
                         navigate(HOME);
                       }}
                     >
-                      {t("Logout")}
+                      <RiLogoutCircleRLine /> {t("Logout")}
                     </a>
                   </li>
                 </ul>

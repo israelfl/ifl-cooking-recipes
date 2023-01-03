@@ -1,4 +1,4 @@
-import { useTasks } from "../contexts/TaskContext";
+import { useTasks } from "../../contexts/taskContext";
 
 function TaskCard({ task }) {
   const { deleteTask, updateTask } = useTasks();

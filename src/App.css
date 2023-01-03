@@ -1,38 +1,39 @@
-.App {
-  text-align: center;
+.card-img-top {
+  width: 100%;
+  height: 12vw;
+  object-fit: cover;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* X-Large devices (large desktops, less than 1400px) */
+@media (max-width: 1399.98px) {
+  .card-img-top {
+    height: 14vw;
+  }
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Large devices (desktops, less than 1200px) */
+@media (max-width: 1199.98px) {
+  .card-img-top {
+    height: 14vw;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+  .card-img-top {
+    height: 19vw;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .card-img-top {
+    height: 38vw;
+  }
+}
+
+/* X-Small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .card-img-top {
+    height: 52vw;
   }
 }

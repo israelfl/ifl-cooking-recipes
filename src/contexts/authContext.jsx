@@ -60,8 +60,8 @@ export function AuthContextProvider({ children }) {
           setIsAuthenticated(true);
         }
       })
-      .catch((error) => console.error("error", "error"));
-  }, [getSession]);
+      .catch((error) => console.error("error", error));
+  }, [getSession, user]);
 
   const value = useMemo(
     () => ({

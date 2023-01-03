@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { supabase } from "../supabase/client";
-import { useAuthContext } from "../contexts/authContext";
+import { useAuthContext } from "./authContext";
 
 export const TaskContext = createContext();
 
@@ -19,19 +19,21 @@ export const TaskContextProvider = ({ children }) => {
 
   const getTasks = async (done = false) => {
     setLoading(true);
-    const { error, data } = await supabase
-      .from("tasks")
-      .select()
-      .eq("userId", user.id)
-      .eq("done", done)
-      .order("id", { ascending: true });
+    if (user.id) {
+      const { error, data } = await supabase
+        .from("tasks")
+        .select()
+        .eq("userId", user.id)
+        .eq("done", done)
+        .order("id", { ascending: true });
 
-    if (error) throw error;
-    setTasks(data);
-    setLoading(false);
+      if (error) throw error;
+      setTasks(data);
+      setLoading(false);
+    }
   };
 
-  const createTask = async (taskName) => {
+  const createTask = async (taskName, done = false) => {
     setadding(true);
     try {
       const { error, data } = await supabase
@@ -42,8 +44,7 @@ export const TaskContextProvider = ({ children }) => {
         })
         .select();
       if (error) throw error;
-
-      setTasks([...tasks, ...data]);
+      if (!done) setTasks([...tasks, ...data]);
     } catch (error) {
       console.error(error);
     } finally {

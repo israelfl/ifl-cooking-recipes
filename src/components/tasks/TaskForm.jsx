@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useTasks } from "../contexts/TaskContext";
+import { useTasks } from "../../contexts/taskContext";
 
-function TaskForm() {
+function TaskForm({ done = false }) {
   const [taskName, setTaskName] = useState("");
   const { createTask, adding } = useTasks();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await createTask(taskName);
+    await createTask(taskName, done);
     setTaskName("");
   };
 

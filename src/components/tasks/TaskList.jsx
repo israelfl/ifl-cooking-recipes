@@ -1,14 +1,16 @@
 import { useEffect } from "react";
-import { useTasks } from "../contexts/TaskContext";
+import { useTasks } from "../../contexts/taskContext";
 import TaskCard from "./TaskCard";
 
 function TaskList({ done = false }) {
-  const { tasks, getTasks, loading, loadingUser } = useTasks();
+  const { tasks, getTasks, loading } = useTasks();
 
   useEffect(() => {
-    if (!loadingUser) getTasks(done);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [done, loadingUser]);
+    async function fetchData() {
+      await getTasks(done);
+    }
+    fetchData();
+  }, [done]);
 
   function renderTasks() {
     if (loading) return <p>Loading...</p>;

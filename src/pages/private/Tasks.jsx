@@ -1,13 +1,14 @@
 import { useState } from "react";
-import TaskForm from "../components/TaskForm";
-import TaskList from "../components/TaskList";
+import TaskForm from "../../components/tasks/TaskForm";
+import TaskList from "../../components/tasks/TaskList";
 
 function Tasks() {
   const [showTaskDone, setshowTaskDone] = useState(false);
+
   return (
     <div className="row">
       <div className="col-md-4 offset-md-4">
-        <TaskForm />
+        <TaskForm done={showTaskDone} />
         <header className="d-flex justify-content-between my-3">
           <span className="h5">
             {showTaskDone ? "Done tasks" : "Pending tasks"}
