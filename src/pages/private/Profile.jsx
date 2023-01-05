@@ -10,9 +10,13 @@ function Profile() {
 
   console.log("profile user", user);
 
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(userProfile.full_name);
   const [fullName, setFullName] = useState("");
+
+  useEffect(() => {
+    setUsername(userProfile.username);
+    setFullName(userProfile.full_name);
+  }, [userProfile]);
 
   const [picture, setPicture] = useState({
     cropperOpen: false,
@@ -25,14 +29,6 @@ function Profile() {
   const setEditorRef = (ed) => {
     editor = ed;
   };
-
-  // useEffect(() => {
-  //   if (user && userProfile) {
-  //     setEmail(user.email);
-  //     setUsername(userProfile.username);
-  //     setFullName(userProfile.full_name);
-  //   }
-  // }, [user, userProfile]);
 
   const handleFileChange = (e) => {
     let url = URL.createObjectURL(e.target.files[0]);
@@ -88,7 +84,7 @@ function Profile() {
             id="user.email"
             aria-describedby="emailHelp"
             readOnly
-            value={email || ""}
+            value={user.email || ""}
           />
           <div id="emailHelp" className="form-text">
             {t("We'll never share your email with anyone else.")}
