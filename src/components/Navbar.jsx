@@ -1,21 +1,27 @@
-import { Link, useNavigate } from "react-router-dom";
-import { HOME, LOGIN, MYKITCHEN, PRIVATE, TASKS } from "../config/routes/paths";
-import { useAuthContext } from "../contexts/authContext";
-import logo from "../assets/logo.png";
-import { useTranslation } from "react-i18next";
-import { lngConfig } from "../config/i18n";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { HiLanguage } from "react-icons/hi2";
 import { GiCook } from "react-icons/gi";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import { useUser } from "@supabase/auth-helpers-react";
+
+import { HOME, LOGIN, MYKITCHEN, PRIVATE, TASKS } from "../config/routes/paths";
+import logo from "../assets/logo.png";
+import { lngConfig } from "../config/i18n";
+import { useServices } from "../services";
 
 function Navbar() {
+  const user = useUser();
+  const {logout} = useServices();
+
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const { logout, isAuthenticated, user } = useAuthContext();
   const [langName, setLangName] = useState(
     lngConfig[window.localStorage.getItem("i18nextLng")]
   );
+
+  //const logout = () => console.log("logout");
 
   const changeLang = (e, lang, langName) => {
     e.preventDefault();
@@ -80,13 +86,13 @@ function Navbar() {
               </ul>
             </li>
             <li className="nav-item">
-              {!isAuthenticated && (
+              {!user && (
                 <Link className="nav-link" to={LOGIN}>
                   {t("Login")}
                 </Link>
               )}
             </li>
-            {isAuthenticated && (
+            {user && (
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"

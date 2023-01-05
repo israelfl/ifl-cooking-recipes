@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
+import { useServices } from "../services";
 import { supabase } from "../supabase/client";
-import { useAuthContext } from "./authContext";
 
 export const TaskContext = createContext();
 
@@ -12,14 +12,14 @@ export const useTasks = () => {
 };
 
 export const TaskContextProvider = ({ children }) => {
-  const { user } = useAuthContext();
+  const { user } = useServices();
   const [tasks, setTasks] = useState([]);
   const [adding, setadding] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const getTasks = async (done = false) => {
     setLoading(true);
-    if (user.id) {
+    if (user?.id) {
       const { error, data } = await supabase
         .from("tasks")
         .select()

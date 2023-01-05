@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { useAuthContext } from "../../contexts/authContext";
+
+import { useServices } from "../../services";
 import { HOME, SIGNUP } from "../../config/routes/paths";
 import ls from "../../assets/login-signup.jpg";
 
 function Login() {
+  const { user, login } = useServices();
+
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { isAuthenticated, login, getSession } = useAuthContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,13 +19,9 @@ function Login() {
   const [validForm, setValidForm] = useState({ email: true, password: true });
   const [loginError, setLoginError] = useState("");
 
-  useEffect(() => {
-    getSession()
-      .then((result) => {
-        if (result.data.session) navigate(HOME);
-      })
-      .catch((error) => console.error(error));
-  }, [navigate, getSession, isAuthenticated]);
+  if (user) {
+    navigate(HOME);
+  }
 
   const validateEmail = (mail) =>
     /^\w+([.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(mail);

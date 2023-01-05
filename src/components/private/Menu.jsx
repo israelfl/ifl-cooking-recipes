@@ -1,24 +1,69 @@
+import { useTranslation } from "react-i18next";
+import { NavLink } from "react-router-dom";
+import {
+  PRIVATE,
+  MYKITCHEN,
+  PROFILE,
+  PASSWORD,
+  DASHBOARD,
+} from "../../config/routes/paths";
+import { BsSpeedometer2, BsFillPersonFill } from "react-icons/bs";
+import { GiCook } from "react-icons/gi";
+import { CgLastpass } from "react-icons/cg";
+
 function Menu() {
+  const { t } = useTranslation();
+
   return (
-    <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-      <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-        <a
-          href="/"
-          className="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
-        >
-          <span className="fs-5 d-none d-sm-inline">Menu</span>
-        </a>
+    <div className="pv-sidebar col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light border border-top-0">
+      <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-dark min-vh-100">
+        <span className="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none fs-5 d-none d-sm-inline">
+          {t("Private Area")}
+        </span>
         <ul
-          className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+          className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100"
           id="menu"
         >
-          <li className="nav-item">
-            <a href="#!" className="nav-link align-middle px-0">
-              <i className="fs-4 bi-house"></i>{" "}
-              <span className="ms-1 d-none d-sm-inline">Home</span>
-            </a>
+          <li className="nav-item my-2 w-100">
+            <NavLink
+              to={`${PRIVATE}/${DASHBOARD}`}
+              className="text-decoration-none align-middle px-1 py-1 d-block w-100"
+            >
+              <BsSpeedometer2 className="text-dark" />{" "}
+              <span className="ms-1 d-none d-sm-inline">{t("Dashboard")}</span>
+            </NavLink>
           </li>
-          <li>
+          <li className="nav-item my-2 w-100">
+            <NavLink
+              to={`${PRIVATE}/${PROFILE}`}
+              className="text-decoration-none align-middle px-1 py-1 d-block w-100"
+            >
+              <BsFillPersonFill className="text-dark" />{" "}
+              <span className="ms-1 d-none d-sm-inline">{t("Profile")}</span>
+            </NavLink>
+          </li>
+          <li className="nav-item my-2 w-100">
+            <NavLink
+              to={`${PRIVATE}/${MYKITCHEN}`}
+              className="text-decoration-none align-middle px-1 py-1 d-block w-100"
+            >
+              <GiCook className="text-dark" />{" "}
+              <span className="ms-1 d-none d-sm-inline">{t("My Kitchen")}</span>
+            </NavLink>
+          </li>
+          <li className="nav-item my-2 w-100">
+            <NavLink
+              to={`${PRIVATE}/${PASSWORD}`}
+              className="text-decoration-none align-middle px-1 py-1 d-block w-100"
+            >
+              <CgLastpass className="text-dark" />{" "}
+              <span className="ms-1 d-none d-sm-inline">
+                {t("Change Pasword")}
+              </span>
+            </NavLink>
+          </li>
+
+          {/* <li>
             <a
               href="#submenu1"
               data-bs-toggle="collapse"
@@ -126,12 +171,13 @@ function Menu() {
               <span className="ms-1 d-none d-sm-inline">Customers</span>{" "}
             </a>
           </li>
+           */}
         </ul>
-        <hr />
+        {/* <hr />
         <div className="dropdown pb-4">
           <a
             href="#!"
-            className="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+            className="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
             id="dropdownUser1"
             data-bs-toggle="dropdown"
             aria-expanded="false"
@@ -173,7 +219,7 @@ function Menu() {
               </a>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,16 +1,21 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+
 import { LOGIN } from "../../config/routes/paths";
-import { useAuthContext } from "../../contexts/authContext";
+import { useServices } from "../../services";
 
 function AdminRoute() {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
+  const { user, userProfile } = useServices();
 
   useEffect(() => {
-    if (user.profile?.roles) {
-      if (!user.profile?.roles.includes("admin")) return navigate(LOGIN);
+    if (userProfile.roles) {
+      if (!userProfile.roles.includes("admin")) return navigate(LOGIN);
     }
+  }, [navigate, userProfile.roles]);
+
+  useEffect(() => {
+    if (user === null) return navigate(LOGIN);
   }, [navigate, user]);
 
   return (

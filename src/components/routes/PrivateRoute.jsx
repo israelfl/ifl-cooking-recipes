@@ -1,33 +1,40 @@
 import { useEffect } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, Navigate } from "react-router-dom";
 import { LOGIN } from "../../config/routes/paths";
-import { useAuthContext } from "../../contexts/authContext";
 import Navbar from "../Navbar";
 import Menu from "../private/Menu";
 
+import { useServices } from "../../services";
+
 function PrivateRoute() {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
+  const { user, userProfile } = useServices();
 
   useEffect(() => {
-    if (user.profile?.roles) {
-      if (!user.profile?.roles.includes("user")) return navigate(LOGIN);
+    if (userProfile.roles) {
+      if (!userProfile.roles.includes("user")) return navigate(LOGIN);
     }
-  }, [navigate, user]);
+  }, [navigate, userProfile.roles]);
 
-  return (
-    <div>
-      <Navbar />
-      <div className="container-fluid">
-        <div className="row flex-nowrap">
-            <Menu />
-          <div className="col py-3">
-            <Outlet />
+  const conditionalRender = () => {
+    if (user === null) return <Navigate to={LOGIN} />;
+    else
+      return (
+        <div>
+          <Navbar />
+          <div className="container-fluid">
+            <div className="row flex-nowrap">
+              <Menu />
+              <div className="col ps-5 py-4">
+                <Outlet />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
+      );
+  };
+
+  return conditionalRender();
 }
 
 export default PrivateRoute;

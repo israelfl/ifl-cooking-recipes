@@ -2,28 +2,24 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { useAuthContext } from "../../contexts/authContext";
+
 import { HOME, LOGIN } from "../../config/routes/paths";
 import ls from "../../assets/login-signup.jpg";
+import { useServices } from "../../services";
 
 function Signup() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { isAuthenticated, signup, getSession } = useAuthContext();
+  const { user, signup } = useServices();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
   const [validForm, setValidForm] = useState({ email: true, password: true });
 
-  useEffect(() => {
-    getSession()
-      .then((result) => {
-        console.log("result", result, isAuthenticated);
-        if (result.data.session) navigate(HOME);
-      })
-      .catch((error) => console.error(error));
-  }, [navigate, getSession, isAuthenticated]);
+  if (user) {
+    navigate(HOME);
+  }
 
   const validateEmail = (mail) =>
     /^\w+([.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(mail);
@@ -38,9 +34,11 @@ function Signup() {
 
     if (validForm.email && validForm.password) {
       signup(email, password)
-        .then((result) => {
-          console.log("result handleSignup", result, isAuthenticated);
-          if (result.data.session) navigate(HOME);
+        .then((response) => {
+          if (response.error) console.log('signup error', response.error);
+          else {
+            return navigate(HOME);
+          }
         })
         .catch((error) => console.error(error));
     }
