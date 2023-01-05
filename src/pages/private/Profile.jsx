@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import AvatarEditor from "react-avatar-editor";
 import { useServices } from "../../services";
 
 function Profile() {
   var editor = "";
+  const inputFileRef = useRef(null);
+
   const { t } = useTranslation();
   const { user, userProfile } = useServices();
-
-  console.log("profile user", user);
 
   const [username, setUsername] = useState(userProfile.full_name);
   const [fullName, setFullName] = useState("");
@@ -31,18 +31,19 @@ function Profile() {
   };
 
   const handleFileChange = (e) => {
-    let url = URL.createObjectURL(e.target.files[0]);
-    console.log(url);
-    setPicture({
-      ...picture,
-      img: url,
-      cropperOpen: true,
-    });
+    if (e.target.files[0]) {
+      let url = URL.createObjectURL(e.target.files[0]);
+      setPicture({
+        ...picture,
+        img: url,
+        zoom: 2,
+        cropperOpen: true,
+      });
+    }
   };
 
   const handleSlider = (e) => {
     e.preventDefault();
-    console.log("value", e.target.value);
     setPicture({
       ...picture,
       zoom: e.target.value,
@@ -54,6 +55,8 @@ function Profile() {
       ...picture,
       cropperOpen: false,
     });
+
+    inputFileRef.current.value = null;
   };
 
   const handleApply = (e) => {
@@ -67,6 +70,8 @@ function Profile() {
         cropperOpen: false,
         croppedImg: croppedImg,
       });
+
+      inputFileRef.current.value = null;
     }
   };
 
@@ -121,7 +126,7 @@ function Profile() {
 
         <div className="row mb-3">
           <div className="col-3">
-            <label htmlFor="formFile" className="form-label">
+            <label htmlFor="formFile" className="form-label mb-3">
               Default file input example
             </label>
             <input
@@ -129,9 +134,10 @@ function Profile() {
               type="file"
               id="formFile"
               onChange={handleFileChange}
+              ref={inputFileRef}
             />
           </div>
-          <div className="col-1">
+          <div className="col-2">
             <p>Preview</p>
             <img
               src={picture.croppedImg}
@@ -159,8 +165,8 @@ function Profile() {
               />
             </div>
             <div className="col-3">
-              <label for="zoomSlider" class="form-label">
-                Zoom ({picture.zoom})
+              <label htmlFor="zoomSlider" className="form-label">
+                Zoom ({picture.zoom * 10})
               </label>
               <input
                 type="range"
@@ -170,22 +176,23 @@ function Profile() {
                 step="0.1"
                 onChange={handleSlider}
                 id="zoomSlider"
+                value={picture.zoom}
               />
               <div
-                class="btn-group"
+                className="btn-group"
                 role="group"
                 aria-label="Basic mixed styles example"
               >
                 <button
                   type="button"
-                  class="btn btn-success"
+                  className="btn btn-success"
                   onClick={handleApply}
                 >
                   Apply
                 </button>
                 <button
                   type="button"
-                  class="btn btn-danger"
+                  className="btn btn-danger"
                   onClick={handleCancel}
                 >
                   Cancel
